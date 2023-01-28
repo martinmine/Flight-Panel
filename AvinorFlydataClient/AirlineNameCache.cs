@@ -1,6 +1,4 @@
-﻿using AvinorFlydataClient.Model;
-
-namespace AvinorFlydataClient;
+﻿namespace AvinorFlydataClient;
 
 public class AirlineNameCache
 {

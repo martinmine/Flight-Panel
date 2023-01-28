@@ -1,5 +1,4 @@
-﻿using System.Timers;
-using FlightListener.OpenSkyNetwork;
+﻿using FlightListener.OpenSkyNetwork;
 
 namespace FlightListener;
 

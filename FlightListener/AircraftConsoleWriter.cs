@@ -1,5 +1,4 @@
 ﻿using FlightListener.Model;
-using FlightListener.OpenSkyNetwork;
 using NAudio.Wave;
 
 namespace FlightListener;
