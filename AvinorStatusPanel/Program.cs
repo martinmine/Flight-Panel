@@ -1,4 +1,5 @@
 using AvinorFlydataClient;
+using AvinorStatusPanel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,11 @@ var client = new FlydataClient();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<FlydataClient>();
+builder.Services.AddSingleton<FlightDataMapper>();
+builder.Services.AddSingleton<AirlineNameCache>();
+builder.Services.AddSingleton<FlightStatusCache>();
 
 var app = builder.Build();
 

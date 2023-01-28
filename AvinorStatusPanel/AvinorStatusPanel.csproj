@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AvinorFlydataClient\AvinorFlydataClient.csproj" />
+    <ProjectReference Include="..\FlightListener\FlightListener.csproj" />
   </ItemGroup>
 
   <ItemGroup>

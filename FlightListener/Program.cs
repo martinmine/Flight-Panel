@@ -1,7 +1,8 @@
 ﻿using FlightListener;
 
 var writer = new AircraftConsoleWriter();
-var radar = new AircraftRadar(writer);
+var filter = new MapFilter();
+var radar = new AircraftRadar(writer, filter);
 await radar.StartLookingForPlanes();
 
 /*
