@@ -3,13 +3,10 @@ using AvinorStatusPanel;
 using AvinorStatusPanel.Hubs;
 using AvinorStatusPanel.Services;
 using FlightListener;
+using FlightListener.OpenSkyNetwork;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var client = new FlydataClient();
-//var s = await client.GetAirlineNames();
-
-// Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<FlydataClient>();
@@ -19,6 +16,9 @@ builder.Services.AddSingleton<FlightStatusCache>();
 builder.Services.AddSingleton<IPlaneSpotter, SpottableAicraftStore>();
 builder.Services.AddHostedService<AircraftRadar>();
 builder.Services.AddTransient<MapFilter>();
+builder.Services.AddSingleton(new OpenSkyNetworkClient(
+    builder.Configuration["OpenSky:Username"],
+    builder.Configuration["OpenSky:Password"]));
 
 var app = builder.Build();
 

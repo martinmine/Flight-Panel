@@ -10,11 +10,8 @@ public class OpenSkyNetworkClient
 {
     private readonly HttpClient _httpClient;
 
-    public OpenSkyNetworkClient()
+    public OpenSkyNetworkClient(string openSkyUsername, string openSkyPassword)
     {
-        var openSkyUsername = Environment.GetEnvironmentVariable("OPENSKY_USERNAME");
-        var openSkyPassword = Environment.GetEnvironmentVariable("OPENSKY_PASSWORD");
-        
         var authenticationBytes = Encoding.ASCII.GetBytes($"{openSkyUsername}:{openSkyPassword}");
         
         _httpClient = new HttpClient();

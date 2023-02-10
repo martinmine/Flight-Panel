@@ -6,9 +6,7 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5006",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "OPENSKY_USERNAME": "",
-        "OPENSKY_PASSWORD": ""
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }

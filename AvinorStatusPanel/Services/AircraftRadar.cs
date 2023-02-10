@@ -11,11 +11,11 @@ public class AircraftRadar : BackgroundService
     private readonly IPlaneSpotter _planeSpotter;
     private readonly MapFilter _mapFilter;
 
-    public AircraftRadar(IPlaneSpotter planeSpotter, MapFilter mapFilter)
+    public AircraftRadar(IPlaneSpotter planeSpotter, MapFilter mapFilter, OpenSkyNetworkClient client)
     {
         _planeSpotter = planeSpotter;
         _mapFilter = mapFilter;
-        _client = new OpenSkyNetworkClient();
+        _client = client;
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(15));
     }
 
