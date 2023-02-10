@@ -1,5 +1,8 @@
 using AvinorFlydataClient;
 using AvinorStatusPanel;
+using AvinorStatusPanel.Hubs;
+using AvinorStatusPanel.Services;
+using FlightListener;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,9 @@ builder.Services.AddSingleton<FlydataClient>();
 builder.Services.AddSingleton<FlightDataMapper>();
 builder.Services.AddSingleton<AirlineNameCache>();
 builder.Services.AddSingleton<FlightStatusCache>();
+builder.Services.AddSingleton<IPlaneSpotter, SpottableAicraftStore>();
+builder.Services.AddHostedService<AircraftRadar>();
+builder.Services.AddTransient<MapFilter>();
 
 var app = builder.Build();
 
@@ -32,5 +38,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapHub<FlightHub>("/flightHub");
 
 app.Run();

@@ -1,0 +1,32 @@
+@page
+@model AvinorStatusPanel.Pages.Departures
+<html>
+  <head>
+    <title>Departures</title>
+    <link rel="stylesheet" href="~/css/style.css">
+  </head>
+  <body>
+    <table class="departures">
+      <tr>
+        <th>Time</th>
+        <th></th>
+        <th>Flight</th>
+        <th>Gate</th>
+        <th style="width: 50%">Destination</th>
+        <th style="width: 50%"><p class="time">@DateTime.Now.ToString("HH:mm")</p></th>
+      </tr>
+
+      @foreach (var row in Model.TableEntries)
+      {
+        <tr>
+          <td>@row.Time</td>
+          <td><img src="https://daisycon.io/images/airline/?width=140&height=60&color=002649&iata=@row.Iata"></td>
+          <td>@row.Flight</td>
+          <td>@row.Gate</td>
+          <td>@row.Destination</td>
+          <td>@row.Status</td>
+        </tr>
+      }
+    </table>
+  </body>
+</html>

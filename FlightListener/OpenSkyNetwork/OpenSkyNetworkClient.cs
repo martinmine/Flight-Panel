@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
@@ -24,7 +25,9 @@ public class OpenSkyNetworkClient
 
     public async Task<IEnumerable<State>> GetStates(double laMin, double loMin, double laMax, double loMax)
     {
-        var query = $"states/all?lamin={laMin}&lomin={loMin}&lamax={laMax}&lomax={loMax}";
+        
+        
+        var query = $"states/all?lamin={laMin.ToString(CultureInfo.InvariantCulture)}&lomin={loMin.ToString(CultureInfo.InvariantCulture)}&lamax={laMax.ToString(CultureInfo.InvariantCulture)}&lomax={loMax.ToString(CultureInfo.InvariantCulture)}";
         Console.WriteLine("Querying planes");
         var response = await _httpClient.GetAsync(query);
 

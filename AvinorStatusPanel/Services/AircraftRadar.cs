@@ -1,8 +1,10 @@
-﻿using FlightListener.OpenSkyNetwork;
+﻿using FlightListener;
+using FlightListener.Model;
+using FlightListener.OpenSkyNetwork;
 
-namespace FlightListener;
+namespace AvinorStatusPanel.Services;
 
-public class AircraftRadar
+public class AircraftRadar : BackgroundService
 {
     private readonly PeriodicTimer _timer;
     private readonly OpenSkyNetworkClient _client;
@@ -17,7 +19,7 @@ public class AircraftRadar
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(15));
     }
 
-    public async Task StartLookingForPlanes()
+    private async Task StartLookingForPlanes()
     {
         do
         {
@@ -43,9 +45,15 @@ public class AircraftRadar
         var mapped = mapper.Map(planesAroundOslo);
         
         var viewablePlanes = _mapFilter.IsWithinInterestArea(mapped);
-        if (viewablePlanes.Any())
-        {
-            _planeSpotter.NotifyViewablePlane(viewablePlanes);
-        }
+       
+        await _planeSpotter.NotifyViewablePlane(viewablePlanes);
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        await StartLookingForPlanes();
+       /* await Task.Delay(10000);
+        await _planeSpotter.NotifyViewablePlane(new List<Aircraft>
+            { new() { Callsign = "SA213", Lng = 12, Lat = 23 } });*/
     }
 }
