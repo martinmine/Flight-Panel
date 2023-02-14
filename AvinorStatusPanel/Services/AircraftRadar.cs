@@ -1,4 +1,5 @@
-﻿using FlightListener;
+﻿using System.Text.Json;
+using FlightListener;
 using FlightListener.Model;
 using FlightListener.OpenSkyNetwork;
 
@@ -10,12 +11,14 @@ public class AircraftRadar : BackgroundService
     private readonly OpenSkyNetworkClient _client;
     private readonly IPlaneSpotter _planeSpotter;
     private readonly MapFilter _mapFilter;
+    private readonly FlightInfoDecorator _flightInfoDecorator;
 
-    public AircraftRadar(IPlaneSpotter planeSpotter, MapFilter mapFilter, OpenSkyNetworkClient client)
+    public AircraftRadar(IPlaneSpotter planeSpotter, MapFilter mapFilter, OpenSkyNetworkClient client, FlightInfoDecorator flightInfoDecorator)
     {
         _planeSpotter = planeSpotter;
         _mapFilter = mapFilter;
         _client = client;
+        _flightInfoDecorator = flightInfoDecorator;
         _timer = new PeriodicTimer(TimeSpan.FromSeconds(15));
     }
 
@@ -45,15 +48,31 @@ public class AircraftRadar : BackgroundService
         var mapped = mapper.Map(planesAroundOslo);
         
         var viewablePlanes = _mapFilter.IsWithinInterestArea(mapped);
+
+        foreach (var flight in viewablePlanes)
+        {
+            await _flightInfoDecorator.AddMoreFlightInfo(flight);
+        }
        
         await _planeSpotter.NotifyViewablePlane(viewablePlanes);
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await StartLookingForPlanes();
-       /* await Task.Delay(10000);
+        /*var flight = new Aircraft() { Icao24 = "47a039", FlightIcao24 = "NOZ941" };
+        
+        await _flightInfoDecorator.AddMoreFlightInfo(flight);
+        var json = System.Text.Json.JsonSerializer.Serialize(flight);
+        Console.WriteLine(json);
+*/
+    /*    var fakePlaneJson = "{\"FlightIcao24\":\"NOZ941\",\"Icao24\":\"47a039\",\"FlightNumber\":\"DY941\",\"Lat\":0,\"Lng\":0,\"Origin\":\"Copenhagen\",\"Destination\":\"Oslo\",\"DepartureTime\":\"2023-02-10T15:30:00\",\"ArrivalTime\":\"2023-02-10T16:45:00\"}";
+        var fakePlane = JsonSerializer.Deserialize<Aircraft>(fakePlaneJson);
+        //await Task.Delay(10000);
         await _planeSpotter.NotifyViewablePlane(new List<Aircraft>
-            { new() { Callsign = "SA213", Lng = 12, Lat = 23 } });*/
+            { fakePlane });*/
+        await StartLookingForPlanes();
+        /* await Task.Delay(10000);
+         await _planeSpotter.NotifyViewablePlane(new List<Aircraft>
+             { new() { Callsign = "SA213", Lng = 12, Lat = 23 } });*/
     }
 }

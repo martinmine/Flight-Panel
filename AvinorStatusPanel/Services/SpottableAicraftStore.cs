@@ -22,7 +22,7 @@ public class SpottableAicraftStore : IPlaneSpotter
 
     public async Task NotifyViewablePlane(IList<Aircraft> planes)
     {
-        var mappedList = planes.ToDictionary(key => key.Callsign, value => value);
+        var mappedList = planes.ToDictionary(key => key.FlightIcao24, value => value);
 
         var containsNewValues = mappedList.Keys.Except(SpottableFlights.Keys).Any();
         var hasRemovedFlights = SpottableFlights.Keys.Except(mappedList.Keys).Any();
@@ -48,7 +48,7 @@ public class SpottableAicraftStore : IPlaneSpotter
                 Console.WriteLine("=== AIRCRAFT ===");
                 Console.WriteLine($"LAT: {plane.Lat}");
                 Console.WriteLine($"LNG: {plane.Lng}");
-                Console.WriteLine($"SGN: {plane.Callsign}");
+                Console.WriteLine($"SGN: {plane.FlightIcao24}");
             }
         }
     }

@@ -12,7 +12,8 @@ public class AircraftMapper
 
     private Aircraft Map(State aircraft) => new()
     {
-        Callsign = aircraft.Callsign,
+        FlightIcao24 = aircraft.Callsign.Trim(),
+        Icao24 = aircraft.Icao24,
         Lat = aircraft.Latitude,
         Lng = aircraft.Longitude
     };

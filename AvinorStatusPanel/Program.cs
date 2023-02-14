@@ -1,3 +1,5 @@
+using System.Globalization;
+using AirLabs;
 using AvinorFlydataClient;
 using AvinorStatusPanel;
 using AvinorStatusPanel.Hubs;
@@ -16,9 +18,11 @@ builder.Services.AddSingleton<FlightStatusCache>();
 builder.Services.AddSingleton<IPlaneSpotter, SpottableAicraftStore>();
 builder.Services.AddHostedService<AircraftRadar>();
 builder.Services.AddTransient<MapFilter>();
+builder.Services.AddTransient<FlightInfoDecorator>();
 builder.Services.AddSingleton(new OpenSkyNetworkClient(
     builder.Configuration["OpenSky:Username"],
     builder.Configuration["OpenSky:Password"]));
+builder.Services.AddSingleton(new AirLabsClient(builder.Configuration["AirLabs:ApiKey"]));
 
 var app = builder.Build();
 

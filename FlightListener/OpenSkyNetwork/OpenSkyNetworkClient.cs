@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -22,25 +23,39 @@ public class OpenSkyNetworkClient
 
     public async Task<IEnumerable<State>> GetStates(double laMin, double loMin, double laMax, double loMax)
     {
+        var query = $"states/all?" +
+                    $"lamin={laMin.ToString(CultureInfo.InvariantCulture)}&" +
+                    $"lomin={loMin.ToString(CultureInfo.InvariantCulture)}&" +
+                    $"lamax={laMax.ToString(CultureInfo.InvariantCulture)}&" +
+                    $"lomax={loMax.ToString(CultureInfo.InvariantCulture)}";
         
-        
-        var query = $"states/all?lamin={laMin.ToString(CultureInfo.InvariantCulture)}&lomin={loMin.ToString(CultureInfo.InvariantCulture)}&lamax={laMax.ToString(CultureInfo.InvariantCulture)}&lomax={loMax.ToString(CultureInfo.InvariantCulture)}";
         Console.WriteLine("Querying planes");
         var response = await _httpClient.GetAsync(query);
 
         if (!response.IsSuccessStatusCode)
-        {
             throw new Exception($"API responded with code {response.StatusCode}");
-        }
 
         var responseContent = await response.Content.ReadFromJsonAsync<StateResponse>();
-
-        //var fileJson = File.ReadAllText("MockedResponse.json");
-        //var responseContent = JsonSerializer.Deserialize<StateResponse>(fileJson, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        
         if (responseContent.States == null)
             return Enumerable.Empty<State>();
             
         return Map(responseContent.States);
+    }
+
+    public async Task<IEnumerable<Flight>> GetFlights(string icao24, long begin, long end)
+    {
+        var query = $"flights/aircraft?icao24={icao24}&begin={begin}&end={end}";
+        var response = await _httpClient.GetAsync(query);
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+            return null;
+        
+        if (!response.IsSuccessStatusCode)
+            throw new Exception($"API responded with code {response.StatusCode}");
+        
+        var responseContent = await response.Content.ReadFromJsonAsync<IEnumerable<Flight>>();
+        return responseContent;
     }
 
     private static IEnumerable<State> Map(IEnumerable<JsonElement[]> statesResponse)
